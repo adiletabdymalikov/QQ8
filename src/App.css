@@ -182,3 +182,94 @@
     border-right-color: var(--border);
   }
 }
+/* Общий фон страницы */
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #8E86F5 0%, #D498F0 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.notes-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+/* Главная карточка */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.main-title {
+    color: white;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Группа ввода в одну строку */
+.input-group-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.input-group-row input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+.add-button {
+    background-color: #7289da;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.add-button:hover {
+    background-color: #5b6eae;
+}
+
+/* Список заметок */
+.empty-state {
+    text-align: center;
+    color: #999;
+    margin-top: 20px;
+}
+
+.note-card {
+    background: rgba(255, 255, 255, 0.5);
+    margin-top: 10px;
+    padding: 15px;
+    border-radius: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.note-title {
+    font-weight: bold;
+    color: #333;
+}
+
+.note-desc {
+    font-size: 13px;
+    color: #666;
+}
