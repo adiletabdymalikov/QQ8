@@ -56,7 +56,7 @@ function Main() {
                     </button>
                 </div>
 
-                {/* Дополнительное поле для описания (опционально) */}
+               
                 <input 
                     style={{width: '100%', marginBottom: '10px', padding: '8px', boxSizing: 'border-box', border: '1px solid #eee', borderRadius: '5px'}}
                     type="text" 

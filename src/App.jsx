@@ -8,13 +8,13 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
-          {/* Главная страница с вашими заметками */}
+          
           <Route path="/main" element={<Main />} />
           
-          {/* Страница продуктов */}
+         
           <Route path="/products" element={<Products />} />
           
-          {/* Редирект, если зашли на пустую страницу */}
+         
           <Route path="/" element={<Main />} />
         </Routes>
       </div>
