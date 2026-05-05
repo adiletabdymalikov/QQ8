@@ -1,81 +1,69 @@
 export const categories = [
-  { id: 1, name: 'Artwork', },
-  { id: 2, name: 'Cosmos' },
-  { id: 3, name: 'Special offer' },
-  { id: 4, name: 'Abstract' }
+  { id: 1, name: 'Бургеры' },
+  { id: 2, name: 'Картофель' },
+  { id: 3, name: 'Напитки' },
+  { id: 4, name: 'Спецпредложения' }
 ];
 
 export const products = [
   {
     id: 1,
-    name: 'Bird',
-    price: 997,
-    
-    color: 'multicolor', 
-    image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=500&auto=format',
+    name: 'Классический Бургер',
+    price: 350,
+    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&auto=format',
     category_id: 1,
-    description: 'Уникальная интерьерная картина с изображением птицы.',
-    brand: 'ArtStudio',
-    stock: 19
+    description: 'Сочная говяжья котлета, свежие овощи и фирменный соус на пышной булке.',
+    brand: 'Burger Master',
+    stock: 50
   },
   {
     id: 2,
-    name: 'Mood girl',
-    price: 97,
-   
-    color: 'red',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format',
+    name: 'Чизбургер Deluxe',
+    price: 390,
+    image: 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=500&auto=format',
     category_id: 1,
-    description: 'Портрет, передающий глубокие эмоции и настроение.',
-    brand: 'Canvas Co',
-    stock: 19
+    description: 'Двойная порция сыра чеддер и карамелизованный лук.',
+    brand: 'Burger Master',
+    stock: 30
   },
   {
     id: 3,
-    name: 'Mood',
-    price: 89,
-   
-    color: 'blue',
-    image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=500&auto=format',
+    name: 'Картофель Фри',
+    price: 150,
+    image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&auto=format',
     category_id: 2,
-    description: 'Абстрактная работа в космическом стиле.',
-    brand: 'Visionary',
-    stock: 1
+    description: 'Хрустящий картофель с морской солью.',
+    brand: 'Farm Fresh',
+    stock: 100
   },
   {
     id: 4,
-    name: 'Mood girl',
-    price: 97,
-    
-    color: 'red',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format',
-    category_id: 1,
-    description: 'Портрет, передающий глубокие эмоции и настроение.',
-    brand: 'Canvas Co',
-    stock: 19
+    name: 'Картофель по-деревенски',
+    price: 180,
+    image: 'https://images.unsplash.com/photo-1518013045958-e11717d4490e?w=500&auto=format',
+    category_id: 2,
+    description: 'Крупные дольки картофеля со специями и чесноком.',
+    brand: 'Farm Fresh',
+    stock: 80
   },
   {
     id: 5,
-    name: 'Mood girl',
-    price: 97,
-    
-    color: 'red',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format',
-    category_id: 1,
-    description: 'Портрет, передающий глубокие эмоции и настроение.',
-    brand: 'Canvas Co',
-    stock: 19
+    name: 'Кока-Кола 0.5',
+    price: 90,
+    image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500&auto=format',
+    category_id: 3,
+    description: 'Классический освежающий напиток.',
+    brand: 'Coca-Cola',
+    stock: 200
   },
   {
     id: 6,
-    name: 'Mood girl',
-    price: 97,
-    
-    color: 'green',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format',
-    category_id: 1,
-    description: 'Портрет, передающий глубокие эмоции и настроение.',
-    brand: 'Canvas Co',
-    stock: 19
+    name: 'Куриные Наггетсы',
+    price: 220,
+    image: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=500&auto=format',
+    category_id: 4,
+    description: '6 штук нежного куриного филе в золотистой панировке.',
+    brand: 'Chicken Joy',
+    stock: 60
   },
 ];

@@ -1,180 +1,111 @@
 import { useEffect, useState } from "react";
-import LeftSidebar from "../components/left-sidebar";
+import { Link, useNavigate } from "react-router-dom"; // Добавили useNavigate
 import { products, categories } from "../data/products";
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 const Products = () => {
-    const [product, setProducts] = useState([]);
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [category, setCategory] = useState('');
+    const [productList, setProductList] = useState([]);
+    const [currentUser, setCurrentUser] = useState(null); // Состояние для юзера
+    const navigate = useNavigate();
 
-    const fetchProducts = () => {
-        setProducts(products);
-    }
-    const searchProducts = (searchText) => {
-         const search = product.filter((p) => p.name.toLowerCase().includes(searchText.toLowerCase()));
-        if(search.length > 0){
-            setProducts(search);
-        }else{
-            fetchProducts();
-        }
-    }
-
-    const addProduct = () => {
-        const newProduct = {
-            id: product.length + 1,
-            name,
-            description,
-            price,
-            category,
-        };
-        alert('Product added!');
-        setProducts([...product, newProduct]);
-        console.log(product);
-    }
-
-    const deleteProduct = (id) => {
-        setProducts(product.filter((p) => p.id !== id));
-    }
     useEffect(() => {
-        fetchProducts();
+        setProductList(products);
+        
+       
+        const session = localStorage.getItem('session');
+        if (session) {
+            setCurrentUser(session);
+        }
     }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('session');
+        setCurrentUser(null);
+        navigate('/login');
+    };
+
     return (
-        <div className="container-fluid">
-            <div className="row">
-                <div className="col-3">
-                    <LeftSidebar />
-                </div>
-                <div className="col-9">
-                    {/* <table>
-                        <thead>
-                            <tr>
-                                <th>Фото</th>
-                                <th>Название</th>
-                                <th>Описание</th>
-                                <th>Цена</th>
-                                <th>Категория</th>
-                                <th>Бренд</th>
-                                <th>Наличие</th>
-                                <th>Действие</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {products.length > 0 &&
-                                products.map((product) => {
-                                    const category = categories.find(c => c.id === product.category_id)?.name || 'Неизвестно';
-                                    return (
-                                        <tr key={product.id}>
-                                            <td>
-                                                <img
-                                                    src={product.image}
-                                                    alt={product.name}
-                                                    style={{ width: '50px', height: '50px', objectFit: 'cover' }}
-                                                />
-                                            </td>
-                                            <td>{product.name}</td>
-                                            <td>{product.description}</td>
-                                            <td>{product.price} сом</td>
-                                            <td>{category}</td>
-                                            <td>{product.brand || '-'}</td>
-                                            <td>{product.stock != null ? product.stock : '-'}</td>
-                                            <td>
-                                                <button>Details</button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            }
-                        </tbody>
-                    </table> */}
-                    <div className="row">
-                        <div className="col-6">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Название"
-                                onChange={(e) => setName(e.target.value)}
-                            />
+        <div className="container-fluid" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh", padding: "20px" }}>
+            <div className="row justify-content-center">
+                <div className="col-md-10">
+                    
+                    <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                        <div>
+                            <h1 className="fw-bold mb-0">Меню</h1>
+                            {currentUser && <small className="text-success fw-bold">Вы вошли как: {currentUser}</small>}
                         </div>
-                        <div className="col-6">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Описание"
-                                onChange={(e) => setDescription(e.target.value)}
-                            />
-                        </div>
-                        <div className="col-6">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Цена"
-                                onChange={(e) => setPrice(e.target.value)}
-                            />
-                        </div>
-                        <div className="col-6">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Категория"
-                                onChange={(e) => setCategory(e.target.value)}
-                            />
-                        </div>
-                        <div className="col-6">
-                            <button className="btn btn-primary" onClick={addProduct}>Добавить</button>
+                        
+                        <div className="d-flex gap-2">
+                            <Link to="/main" className="btn btn-outline-dark px-4 py-2">
+                                🏠 Заказы
+                            </Link>
+
+                         
+                            {currentUser ? (
+                                <>
+                                    <Link to="/dashboard" className="btn btn-outline-primary px-4 py-2">
+                                        Панель
+                                    </Link>
+                                    <button onClick={handleLogout} className="btn btn-danger px-4 py-2">
+                                        Выход
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/login" className="btn btn-primary px-4 py-2">
+                                        Вход
+                                    </Link>
+                                    <Link to="/register" className="btn btn-dark px-4 py-2">
+                                        Регистрация
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
 
+                    <div className="row g-4">
+                        {productList.length > 0 ? (
+                            productList.map((item) => {
+                                const categoryName = categories.find(c => c.id === item.category_id)?.name || 'Общее';
 
-
-                    <h1>Список продуктов</h1>
-
-                    <div className="row">
-                        <div className="col-6">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Поиск"
-                                onChange={(e) => searchProducts(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        {product.length > 0 ?
-                            <>
-                                {product.map((i) =>
-                                    <div className="col-3 bg-light p-2">
-                                        <div className="product-item">
-                                            <h2>{i.name}</h2>
-                                            <p>{i.description}</p>
-                                            <p><strong>Цена:</strong> {i.price} руб.</p>
-                                            <p><strong>Категория:</strong> {
-                                                categories.find(c => c.id === i.category_id)?.name || 'Неизвестно'
-                                            }</p>
-                                            <p><strong>Бренд:</strong> {i.brand}</p>
-                                            <p><strong>На складе:</strong> {i.stock} шт.</p>
-                                            <button className="btn btn-danger" onClick={() => deleteProduct(i.id)}>Удалить</button>
+                                return (
+                                    <div className="col-12 col-sm-6 col-lg-4" key={item.id}>
+                                        <div className="card h-100 border-0 shadow-sm p-3" style={{ borderRadius: "15px" }}>
+                                            <img 
+                                                src={item.image} 
+                                                className="card-img-top" 
+                                                alt={item.name} 
+                                                style={{ height: "200px", objectFit: "cover", borderRadius: "10px" }}
+                                            />
+                                            <div className="card-body px-1">
+                                                <div className="d-flex justify-content-between align-items-start">
+                                                    <h5 className="card-title fw-bold mb-1">{item.name}</h5>
+                                                    <span className="badge bg-warning text-dark">{item.price} сом</span>
+                                                </div>
+                                                <p className="text-muted small mb-2">{categoryName}</p>
+                                                <p className="card-text text-secondary" style={{ fontSize: "0.9rem" }}>
+                                                    {item.description}
+                                                </p>
+                                            </div>
+                                            <div className="card-footer bg-transparent border-0 p-0">
+                                                <button className="btn btn-primary w-100 py-2 fw-bold" style={{ borderRadius: "10px" }}>
+                                                    Смотреть рецепт
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                )
-                                }
-
-                            </>
-                            :
-
-                            <div className="col-12">
-                                <p>Нет продуктов</p>
+                                );
+                            })
+                        ) : (
+                            <div className="col-12 text-center mt-5">
+                                <p className="text-muted">Загрузка блюд...</p>
                             </div>
-
-                        }
+                        )}
                     </div>
                 </div>
             </div>
-
         </div>
-    )
-}
+    );
+};
 
 export default Products;
