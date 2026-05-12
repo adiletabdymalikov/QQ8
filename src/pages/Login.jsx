@@ -9,7 +9,7 @@ export function Login({ setCurrentUser }) {
   const navigate = useNavigate()
 
   
-  const API_URL = 'https://69f49ed9fb098eb7f0b4a05d.mockapi.io/ww/ww';
+  const API_URL = 'https://6a01fa240d92f63dd25323c7.mockapi.io/t/ad';
 
   async function handleLogin(e) {
     e.preventDefault()

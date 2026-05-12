@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Добавили useNavigate
+import { Link, useNavigate } from "react-router-dom"; 
 import { products, categories } from "../data/products";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Products = () => {
     const [productList, setProductList] = useState([]);
-    const [currentUser, setCurrentUser] = useState(null); // Состояние для юзера
+    const [currentUser, setCurrentUser] = useState(null); 
     const navigate = useNavigate();
 
     useEffect(() => {

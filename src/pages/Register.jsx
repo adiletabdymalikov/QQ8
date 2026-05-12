@@ -3,37 +3,36 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
-    const [form, setForm] = useState({ username: '', password: '', confirm: '' });
+   
+    const [form, setForm] = useState({ username: '', phone: '', password: '', confirm: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-   
-    const API_URL = 'https://69f49ed9fb098eb7f0b4a05d.mockapi.io/ww/ww';
+    const API_URL = 'https://6a01fa240d92f63dd25323c7.mockapi.io/t/ad';
 
     const handleRegister = async (e) => {
         e.preventDefault();
         setError('');
 
-       
-        if (form.username.length < 3) return setError('Логин слишком короткий');
+        if (form.username.length < 3) return setError('Имя слишком короткое');
+        if (form.phone.length < 10) return setError('Введите корректный номер телефона');
         if (form.password !== form.confirm) return setError('Пароли не совпадают');
 
         setLoading(true);
 
         try {
-           
             const checkResponse = await axios.get(API_URL);
-            const existingUser = checkResponse.data.find(u => u.username === form.username);
+            const existingUser = checkResponse.data.find(u => u.phone === form.phone);
 
             if (existingUser) {
                 setLoading(false);
-                return setError('Этот логин уже занят');
+                return setError('Этот номер телефона уже занят');
             }
 
-            
             const response = await axios.post(API_URL, {
                 username: form.username,
+                phone: form.phone, 
                 password: form.password,
                 createdAt: new Date().toLocaleString('ru-RU')
             });
@@ -51,7 +50,6 @@ function Register() {
         }
     };
 
-    
     useEffect(() => {
         if (localStorage.getItem('session')) {
             navigate('/main');
@@ -66,8 +64,9 @@ function Register() {
                 {error && <div className="alert alert-danger p-2 small">{error}</div>}
 
                 <form onSubmit={handleRegister}>
+                   
                     <div className="mb-3">
-                        <label className="form-label small fw-bold">ЛОГИН</label>
+                        <label className="form-label small fw-bold">Name</label>
                         <input 
                             type="text" 
                             className="form-control" 
@@ -76,6 +75,20 @@ function Register() {
                             required 
                         />
                     </div>
+
+                   
+                    <div className="mb-3">
+                        <label className="form-label small fw-bold">Телефон</label>
+                        <input 
+                            type="tel" 
+                            className="form-control" 
+                            placeholder="+996..."
+                            value={form.phone}
+                            onChange={(e) => setForm({...form, phone: e.target.value})}
+                            required 
+                        />
+                    </div>
+                    
                     <div className="mb-3">
                         <label className="form-label small fw-bold">ПАРОЛЬ</label>
                         <input 

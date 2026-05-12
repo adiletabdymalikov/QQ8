@@ -1,31 +1,29 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; 
-import { products } from "../data/products"; 
+import { useNavigate } from "react-router-dom";
 
 function Main() {
     const [notes, setNotes] = useState([]);
-    const [cart, setCart] = useState([]); 
-    const [currentUser, setCurrentUser] = useState(null); 
+    const [appointment, setAppointment] = useState({ date: '', time: '', service: 'Стрижка' });
+    const [currentUser, setCurrentUser] = useState(null);
     const navigate = useNavigate();
 
-   
+    const API_URL = 'https://6a01fa240d92f63dd25323c7.mockapi.io/t/ad';
+
     useEffect(() => {
         const session = localStorage.getItem('session');
         if (!session) {
-            navigate('/login'); 
+            navigate('/login');
         } else {
             setCurrentUser(session);
             fetchNotes(session);
         }
     }, [navigate]);
 
-   
     const fetchNotes = async (username) => {
         try {
-            const response = await axios.get('https://69dd38ef84f912a26404e7d2.mockapi.io/notes');
+            const response = await axios.get(API_URL);
             if (response.status === 200) {
-               
                 const myNotes = response.data.filter(note => note.username === username);
                 setNotes(myNotes);
             }
@@ -34,36 +32,28 @@ function Main() {
         }
     }
 
-    const addToCart = (product) => {
-        const existing = cart.find(item => item.id === product.id);
-        if (existing) {
-            setCart(cart.map(item => 
-                item.id === product.id ? { ...item, count: item.count + 1 } : item
-            ));
-        } else {
-            setCart([...cart, { ...product, count: 1 }]);
-        }
-    }
 
-    
-    const postOrder = async () => {
-        if (cart.length === 0) return alert("Корзина пуста!");
-
-        const orderSummary = cart.map(item => `${item.name} x${item.count}`).join(", ");
-        const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.count), 0);
+    const postAppointment = async (e) => {
+        e.preventDefault();
+        if (!appointment.date || !appointment.time) return alert("Выберите дату и время!");
 
         try {
-            const response = await axios.post('https://69dd38ef84f912a26404e7d2.mockapi.io/notes', {
-                heading: `Чек #${Math.floor(Math.random() * 1000)}`,
-                description: `${orderSummary} | Итого: ${totalPrice} сом`,
-                username: currentUser 
+            const response = await axios.post(API_URL, {
+                heading: `Запись: ${appointment.service}`,
+                description: `Дата: ${appointment.date} | Время: ${appointment.time}`,
+                username: currentUser,
+                date: appointment.date,
+                time: appointment.time
             });
+
             if (response.status === 201 || response.status === 200) {
-                setCart([]); 
-                fetchNotes(currentUser); 
+                alert("Вы успешно записаны!");
+                setAppointment({ date: '', time: '', service: 'Стрижка' });
+                fetchNotes(currentUser);
             }
         } catch (error) {
             console.error(error);
+            alert("Ошибка при записи");
         }
     }
 
@@ -73,66 +63,84 @@ function Main() {
     };
 
     return (
-        <div className="notes-container" style={{padding: '20px', maxWidth: '800px', margin: '0 auto'}}>
-            
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px'}}>
+        <div className="container" style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+
+            <div className="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h2 style={{margin: 0}}>📝 Касса</h2>
-                    {currentUser && <small className="text-success">Аккаунт: {currentUser}</small>}
+                    <h2 className="mb-0">✂️ BarberBook</h2>
+                    {currentUser && <small className="text-primary">Клиент: {currentUser}</small>}
                 </div>
-                
-                <div style={{display: 'flex', gap: '10px'}}>
-                    <Link to="/Products" className="btn btn-outline-primary">🍔 Меню</Link>
-                    <Link to="/dashboard" className="btn btn-light">⚙️ Админ</Link>
-                    <button onClick={handleLogout} className="btn btn-danger">Выход</button>
-                </div>
-            </div>
-            
-            <div className="fast-menu" style={{display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '20px'}}>
-                {products.map((item) => (
-                    <button 
-                        key={item.id}
-                        className="btn btn-outline-dark btn-sm"
-                        onClick={() => addToCart(item)}
-                    >
-                        + {item.name}
-                    </button>
-                ))}
+                <button onClick={handleLogout} className="btn btn-sm btn-outline-danger">Выход</button>
             </div>
 
-            <div className="glass-panel" style={{background: '#fff3cd', padding: '15px', borderRadius: '10px', marginBottom: '20px', border: '1px solid #ffeeba'}}>
-                <h4 style={{marginTop: 0}}>Текущий чек:</h4>
-                {cart.length > 0 ? (
-                    <>
-                        {cart.map(item => (
-                            <div key={item.id} style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
-                                <span>{item.name} <strong>x{item.count}</strong></span>
-                                <span>{item.price * item.count} сом</span>
-                            </div>
-                        ))}
-                        <hr />
-                        <div style={{display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '18px'}}>
-                            <span>ИТОГО:</span>
-                            <span>{cart.reduce((sum, item) => sum + (item.price * item.count), 0)} сом</span>
+
+            <div className="card p-4 shadow-sm mb-5" style={{ borderRadius: '15px', border: 'none', background: '#f8f9fa' }}>
+                <h4 className="mb-3">Записаться на стрижку</h4>
+                <form onSubmit={postAppointment}>
+                    <div className="mb-3">
+                        <label className="form-label small fw-bold">Услуга</label>
+                        <select
+                            className="form-select"
+                            value={appointment.service}
+                            onChange={(e) => setAppointment({ ...appointment, service: e.target.value })}
+                        >
+                            <option value="Мужская стрижка">Мужская стрижка</option>
+                            <option value="Стрижка бороды">Стрижка бороды</option>
+                            <option value="Комплекс (Голова+Борода)">Комплекс (Голова+Борода)</option>
+                            <option value="Детская стрижка">Детская стрижка</option>
+                        </select>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-md-6 mb-3">
+                            <label className="form-label small fw-bold">Выберите дату</label>
+                            <input
+                                type="date"
+                                className="form-control"
+                                value={appointment.date}
+                                min={new Date().toISOString().split('T')[0]}
+                                onChange={(e) => setAppointment({ ...appointment, date: e.target.value })}
+                                required
+                            />
                         </div>
-                        <button className="btn btn-success w-100 mt-3" onClick={postOrder}>
-                            ОФОРМИТЬ ЧЕК
-                        </button>
-                        <button className="btn btn-link btn-sm w-100 text-danger" onClick={() => setCart([])}>Очистить</button>
-                    </>
-                ) : <p>Добавьте еду в чек...</p>}
+                        <div className="col-md-6 mb-3">
+                            <label className="form-label small fw-bold">Выберите время</label>
+                            <input
+                                type="time"
+                                className="form-control"
+                                value={appointment.time}
+                                onChange={(e) => setAppointment({ ...appointment, time: e.target.value })}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <button type="submit" className="btn btn-dark w-100 fw-bold py-2 mt-2">
+                        ПОДТВЕРДИТЬ ЗАПИСЬ
+                    </button>
+                </form>
             </div>
 
-            <div className="notes-list">
-                <h4>История ваших чеков:</h4>
+
+            <div className="history">
+                <h5 className="mb-3">Мои предстоящие визиты:</h5>
                 {notes.length > 0 ? (
-                    notes.slice().reverse().map((i) => (
-                        <div className="note-card" key={i.id} style={{borderLeft: '5px solid #28a745', marginBottom: '10px', padding: '15px', background: '#fff', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
-                            <div style={{fontWeight: 'bold'}}>{i.heading}</div>
-                            <div style={{fontSize: '14px', color: '#555'}}>{i.description}</div>
+                    notes.slice().reverse().map((item) => (
+                        <div key={item.id} className="card mb-3 p-3 shadow-sm" style={{ borderLeft: '5px solid #000' }}>
+                            <div className="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div className="fw-bold">{item.heading}</div>
+                                    <div className="text-muted small">{item.description}</div>
+                                </div>
+                                <span className="badge bg-success">Ожидается</span>
+                            </div>
                         </div>
                     ))
-                ) : <p className="text-muted">У вас пока нет оформленных заказов.</p>}
+                ) : (
+                    <div className="text-center p-4 border rounded bg-white text-muted">
+                        У вас пока нет активных записей.
+                    </div>
+                )}
             </div>
         </div>
     );
